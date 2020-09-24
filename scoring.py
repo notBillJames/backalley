@@ -1,5 +1,10 @@
 import pandas as pd 
 import numpy as np 
+def change_order(ls):
+    first = ls[0]
+    new_list = ls[1:]
+    new_list.append(first)
+    return new_list
 
 def score_func(row):
   ba = row.BA 
@@ -15,11 +20,21 @@ def score_func(row):
     score_col = bid * -3
   return score_col
 
+def card_count(*args):
+    count = 0
+    ascending = True
+    if count < max_hand:
+        ascending = True
+        count += 1
+    else:
+        ascending = False
+        count += -1
+    return count, ascending
+
 class Player():
   def __init__(self, name):
     self.name = name
     self.bids = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Bid', 'BA', 'Result'])
-    self.score = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Score'])
   
   def bid(self, round_number, card_count):
     round_data = {
@@ -38,7 +53,12 @@ class Player():
     bid_df = pd.DataFrame(round_data)
     self.bids = pd.concat([self.bids, bid_df])
     return bid_df
-    
+  
+  def score_round(self):
+    print(f'How many tricks did {self.name} win?')
+    result = int(input())
+    self.bids.fillna(result, inplace=True)
+    self.score = self.bids.copy()
+    self.score['Score'] = self.score.apply(score_func, axis=1)
+    self.score = self.score.loc[:, ['Round #', 'Card Count', 'Player', 'Score']]
 
-
-    
