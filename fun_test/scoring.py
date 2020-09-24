@@ -2,27 +2,31 @@ import pandas as pd
 import numpy as np 
 
 def score_func(row):
-    if row.BA == 'y' and row.Result == row.Bid:
-      row['Score'] = 10 * row.Bid 
-    elif row.BA == 'y':
-      row['Score'] = -10 * row['Bid']
-    elif row.Bid >= row.Result:
-      row['Score'] = 3 * row['Bid'] + row['Result'] % row['Bid']
-    else:
-      row['Score'] = -3 * row['Bid']
+  ba = row.BA 
+  bid = row.Bid 
+  result = row.Result
+  if ba == 'y' and result == bid:
+    score_col = bid * 10
+  elif ba == 'y':
+    score_col = bid * -10
+  elif result >= bid:
+    score_col = bid * 3 + result - bid
+  else:
+    score_col = bid * -3
+  return score_col
 
 class Player():
   def __init__(self, name):
     self.name = name
-    self.bids = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Bid', 'BA'])
+    self.bids = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Bid', 'BA', 'Result'])
+    self.score = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Score'])
   
   def bid(self, round_number, card_count):
     round_data = {
       'Round #': [round_number],
       'Card Count': [card_count],
       'Player': str(self.name),
-      'Result': np.NaN,
-      'Score': np.NaN
+      'Result': np.NaN
     }
     print(f'What does {self.name} bid?')
     round_data['Bid'] = int(input())
@@ -34,19 +38,7 @@ class Player():
     bid_df = pd.DataFrame(round_data)
     self.bids = pd.concat([self.bids, bid_df])
     return bid_df
-
-  def score_round(self):
-    score_df = self.bids.copy()
-    print(f'What did {self.name} get?')
-    result = int(input())
-    result = {
-      "Round #": score_df['Round #'].max(),
-      "Result": result
-    }
-    result = pd.DataFrame.from_dict(result)
-    result.set_index('Round #')
-    score_df = score_df.update(result)
-    score_df['Score'] = score_df.apply(score_func, axis=1)
+    
 
 
     
