@@ -35,6 +35,10 @@ class Player():
   def __init__(self, name):
     self.name = name
     self.bids = pd.DataFrame(columns=['Round #', 'Card Count', 'Player', 'Bid', 'BA', 'Result'])
+
+  def __repr__(self):
+    repr = f'{self.name}'
+    return repr
   
   def bid(self, round_number, card_count):
     round_data = {
@@ -61,4 +65,3 @@ class Player():
     self.score = self.bids.copy()
     self.score['Score'] = self.score.apply(score_func, axis=1)
     self.score = self.score.loc[:, ['Round #', 'Card Count', 'Player', 'Score']]
-
