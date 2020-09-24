@@ -1,0 +1,5 @@
+.vscode
+backalley_venv
+fun_test/__pycache__
+fun_test/.ipynb_checkpoints
+fun_test/scoring_old.py
