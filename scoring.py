@@ -5,9 +5,9 @@ def score_func(row):
   ba = row.BA 
   bid = row.Bid 
   result = row.Result
-  if ba == 'y' and result == bid:
+  if ba == 'Yes' and result == bid:
     score_col = bid * 10
-  elif ba == 'y':
+  elif ba == 'Yes':
     score_col = bid * -10
   elif result >= bid:
     score_col = bid * 3 + result - bid
@@ -36,8 +36,12 @@ class Player():
     if round_data['Bid'] == card_count:
       print('Backalley?')
       round_data['BA'] = str(input())
+      if 'y' in round_data['BA']:
+        round_data['BA'] = 'Yes'
+      else:
+        round_data['BA'] = 'No'
     else:
-      round_data['BA'] = 'n'
+      round_data['BA'] = 'No'
     bid_df = pd.DataFrame(round_data)
     self.bids = pd.concat([self.bids, bid_df])
     return bid_df
