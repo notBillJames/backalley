@@ -1,10 +1,5 @@
 import pandas as pd 
 import numpy as np 
-def change_order(ls):
-    first = ls[0]
-    new_list = ls[1:]
-    new_list.append(first)
-    return new_list
 
 def score_func(row):
   ba = row.BA 
@@ -19,17 +14,6 @@ def score_func(row):
   else:
     score_col = bid * -3
   return score_col
-
-def card_count(*args):
-    count = 0
-    ascending = True
-    if count < max_hand:
-        ascending = True
-        count += 1
-    else:
-        ascending = False
-        count += -1
-    return count, ascending
 
 class Player():
   def __init__(self, name):
@@ -65,3 +49,49 @@ class Player():
     self.score = self.bids.copy()
     self.score['Score'] = self.score.apply(score_func, axis=1)
     self.score = self.score.loc[:, ['Round #', 'Card Count', 'Player', 'Score']]
+    return self.score
+
+class Game():
+  def __init__(self, names):
+    self.players = names
+    self.names = [print(i) for i in names]
+    self.max_hand = (54 - len(names) % 54) / len(names)
+    self.round_number = 1
+    self.count = 1
+    self.ascending = True
+
+  def card_count(self):
+    if self.count < self.max_hand:
+        self.ascending = True
+        self.count += 1
+    else:
+        self.ascending = False
+        self.count += -1
+
+  def change_order(self):
+    new_list = self.players[1:]
+    new_list.append(self.players[0])
+    return new_list
+
+  def bid(self):
+    bid_list = []
+    for name in self.players:
+      bid = name.bid(self.round_number, self.count)
+      bid = bid.loc[:, [c for c in bid.columns if c != 'Result']]
+      bid_list.append(bid)
+    bid = pd.concat(bid_list)
+    bid.sort_values(by='Bid', inplace=True, ascending=False)
+    self.round_number += 1
+    self.card_count()
+    return bid.reset_index(drop=True)
+  
+  def score(self):
+    scores = []
+    for player in self.players:
+      score_df = player.score_round()
+      scores.append(score_df)
+    scores = pd.concat(scores)
+    scores = scores.groupby('Player').Score.sum()
+    scores.sort_values(ascending=False)
+    self.players = self.change_order()
+    return scores
