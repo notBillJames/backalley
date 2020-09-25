@@ -92,6 +92,6 @@ class Game():
       scores.append(score_df)
     scores = pd.concat(scores)
     scores = scores.groupby('Player').Score.sum()
-    scores.sort_values(ascending=False)
+    scores = scores.sort_values(ascending=False)
     self.players = self.change_order()
     return scores
