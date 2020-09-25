@@ -3,3 +3,4 @@ backalley_venv
 __pycache__
 .ipynb_checkpoints
 scoring_old.py
+Scoring.ipynb
