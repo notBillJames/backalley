@@ -36,7 +36,7 @@ class Player():
     if round_data['Bid'] == card_count:
       print('Backalley?')
       round_data['BA'] = str(input())
-      if 'y' in round_data['BA']:
+      if round_data['BA'] in 'YesyesyY':
         round_data['BA'] = 'Yes'
       else:
         round_data['BA'] = 'No'
@@ -60,17 +60,21 @@ class Game():
     self.players = names
     self.names = [print(i) for i in names]
     self.max_hand = (54 - len(names) % 54) / len(names)
+    if self.max_hand >= 7.0:
+      self.max_hand = 7.0
     self.round_number = 1
     self.count = 1
     self.ascending = True
-
+    
   def card_count(self):
-    if self.count < self.max_hand:
-        self.ascending = True
+    if self.ascending is True:
+      if self.count < self.max_hand:
         self.count += 1
-    else:
-        self.ascending = False
+      else:
         self.count += -1
+        self.ascending = False
+    else:
+      self.count += -1
 
   def change_order(self):
     new_list = self.players[1:]
