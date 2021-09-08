@@ -30,7 +30,7 @@ Some rules for playing a trick are as follows
 <li>Any Other Suit High A --> 2 Low</li>
 </ol>
 Note: If a card is played that is not trump suit or the suit that was lead, it can *never win* the trick. Take this as an opporunity to get rid of the cards that have a low chance of winning like 2's and 3's!<br>
-
+<br>
 Once all the cards are played the round is over, the cards are shuffled and redealt by whoever led the bidding last round but this time with one more card than the previous round. The game is played like this up until the maximum number of cards each player can have, and then goes back down. For example with 6 people the game would go from one card up to seven cards, then back down to one card.
 
 ### Scoring
