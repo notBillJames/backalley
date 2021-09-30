@@ -74,7 +74,7 @@ class Game():
     def __init__(self, names):
       self.players = names
       self.names = [print(i) for i in names]
-      self.max_hand = (54 - len(names) % 54) / len(names)
+      self.max_hand = 54 / len(names)
       if self.max_hand >= 7.0:
         self.max_hand = 7.0
       self.round_number = 1
