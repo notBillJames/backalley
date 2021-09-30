@@ -1,6 +1,21 @@
 import pandas as pd 
 import numpy as np 
 
+def create_game():
+    try:
+        player_count = int(input('How many will be playing today? '))
+    except ValueError:
+        print('Use a digit for this one!')
+        player_count = int(input('How many will be playing today? '))
+        
+    players = []
+    for i in range(player_count):
+        name = str(input(f'Please enter a name for Player {i + 1}: '))
+        players.append(Player(name))
+
+    game = Game(players)
+    return game
+
 def score_func(row):
   ba = row.BA 
   bid = row.Bid 
