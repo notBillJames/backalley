@@ -10,7 +10,7 @@ def create_game():
         player_count = int(input('How many will be playing today? '))
     players = []
     for i in range(player_count):
-        name = str(input(f'Please enter a name for Player {i + 1}: '))
+        name = input(f'Please enter a name for Player {i + 1}: ')
         players.append(Player(name))
 
     game = Game(players)
@@ -32,16 +32,16 @@ def score_func(row):
     return score_col
 
 
-class Player():
+class Player:
     def __init__(self, name):
         self.name = name
         self.bids = pd.DataFrame(
             columns=['Round #', 'Card Count', 'Player', 'Bid', 'BA', 'Result'])
-     
+
     def __repr__(self):
-        repr = f'{self.name}'
-        return repr
-        
+        s = f'{self.name}'
+        return s
+
     def bid(self, round_number, card_count):
         round_data = {
             'Round #': [round_number],
@@ -49,8 +49,11 @@ class Player():
             'Player': str(self.name),
             'Result': np.NaN
         }
-        print(f'What does {self.name} bid?')
-        round_data['Bid'] = int(input())
+        bid = input(f'What does {self.name} bid? ')
+        while not bid.isdigit():
+            print('Must enter a digit')
+            bid = input('How many will be playing today? ')
+        round_data['Bid'] = int(bid)
         if round_data['Bid'] == card_count:
             print('Backalley?')
             round_data['BA'] = str(input())
@@ -63,30 +66,37 @@ class Player():
         bid_df = pd.DataFrame(round_data)
         self.bids = pd.concat([self.bids, bid_df])
         return bid_df
-    
+
     def score_round(self):
-        print(f'How many tricks did {self.name} win?')
-        result = int(input())
+        result = int(input(f'How many tricks did {self.name} win?'))
         self.bids.fillna(result, inplace=True)
         self.score = self.bids.copy()
         self.score['Score'] = self.score.apply(score_func, axis=1)
-        self.score = self.score.loc[:, ['Round #', 'Card Count',
-                                        'Player', 'Score']]
+        self.score = self.score[['Round #', 'Card Count',
+                                 'Player', 'Score']]
 
 
 class Game():
-    def __init__(self, names):
-        self.players = names
-        self.names = [print(i) for i in names]
-        self.max_hand = 54 / len(names)
+    def __init__(self):
+        player_count = input('How many will be playing today? ')
+        while not player_count.isdigit():
+            print('Must enter a digit')
+            player_count = input('How many will be playing today? ')
+        player_count = int(player_count)
+        players = []
+        for i in range(player_count):
+            name = input(f'Please enter a name for Player {i + 1}: ')
+            players.append(Player(name))
+        self.players = [print(i) for i in players]
+        self.max_hand = 54 // len(players)
         if self.max_hand >= 7.0:
             self.max_hand = 7.0
         self.round_number = 1
         self.count = 1
         self.ascending = True
-      
+
     def card_count(self):
-        if self.ascending is True:
+        if self.ascending:
             if self.count < self.max_hand:
                 self.count += 1
             else:
@@ -111,7 +121,7 @@ class Game():
         self.round_number += 1
         self.card_count()
         return bid.reset_index(drop=True)
-    
+
     def score(self):
         scores = []
         for player in self.players:
